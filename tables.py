@@ -22,6 +22,7 @@ delimiters = {
 }
 code_dict = {}
 code_list = []
+lexeme_list = []
 constTab = {}
 variables_tab = {}
 errors = []

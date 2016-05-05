@@ -1,3 +1,4 @@
-PROGRAM program1;
+PROGRAM;
 CONST:
     roman : FLOAT;
+(*comment*);

@@ -39,24 +39,23 @@ class LexicalAnalyzer:
     def scan(self):
         # read_flag = True
         # res = []
-        strBuffer = ""
         lex_code = 0
         with open("test.dat") as f:
             try:
+                symbol = self.gets(f)
                 while True:
-                    symbol = self.gets(f)
+                    fuck = False
                     buffer = ""
                     if symbol.value == '':
                         break
                     lex_code = 0
-                    if symbol.attr == 0:
-                            while symbol.attr == 0:  # Whitespaces
-                                symbol = self.gets(f)
+                    while symbol.attr == 0 and symbol.value != '':  # Whitespaces
+                        symbol = self.gets(f)
                     # elif symbol.attr == 1:  # Constant
                     #     while symbol.attr == 1:
                     #         buffer += symbol.value
                     #         symbol = gets(f)
-                    elif symbol.attr == 2:
+                    if symbol.attr == 2:  # identifier
                         while symbol.attr == 2 or symbol.attr == 1:
                             buffer += symbol.value
                             symbol = self.gets(f)
@@ -67,7 +66,7 @@ class LexicalAnalyzer:
                         else:
                             lex_code = len(variables_tab) + len(key_words) + 501
                             variables_tab[buffer] = lex_code
-                    elif symbol.attr == 3:
+                    elif symbol.attr == 3:  # comments
                         try:
                             second_symbol = self.gets(f)
                             # ???
@@ -82,13 +81,15 @@ class LexicalAnalyzer:
                         except EOFException:
                             errors.append("Expected *) but end of file was found")
                             pass
-                    elif symbol.attr == 4:
-                        lex_code = symbol.value
+                    elif symbol.attr == 4:  # delimiters
+                        buffer = symbol.value
+                        lex_code = delimiters[buffer]
                         symbol = self.gets(f)
                     elif symbol.attr == 5:  # Error
                         errors.append("Wrong symbol: %s" % symbol.value)
-                    code_dict[buffer] = lex_code
-                    code_list.append(lex_code)
+                    if fuck != True:
+                        code_list.append(lex_code)
+                        lexeme_list.append(buffer)
             except EOFException:
                 pass
 
@@ -96,4 +97,5 @@ if __name__ == '__main__':
     la = LexicalAnalyzer()
 #    la.prerry_print()
     la.scan()
-    print(code_dict)
+    for i in lexeme_list, code_list:
+        print(i)
