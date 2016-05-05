@@ -1,0 +1,17 @@
+PROGRAM program1;
+CONST:
+    roman : FLOAT;
+    hol : INTEGER;
+
+PROCEDURE proc1 (arg1 : INTEGER; arg2: FLOAT);
+BEGIN
+
+END;
+
+PROCEDURE proc2();
+BEGIN
+    (*comment*)
+END;
+BEGIN
+
+END
