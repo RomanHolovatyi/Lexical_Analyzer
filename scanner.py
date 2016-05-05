@@ -1,5 +1,5 @@
 from tables import *
-import pickle
+import json
 from prettytable import PrettyTable
 
 
@@ -41,6 +41,7 @@ class LexicalAnalyzer:
         # read_flag = True
         # res = []
         lex_code = 0
+        open("test.txt", 'w').close()
         with open("test.dat") as f:
             try:
                 symbol = self.gets(f)
@@ -93,8 +94,10 @@ class LexicalAnalyzer:
                     elif symbol.attr == 5:  # Error
                         errors.append("Wrong symbol: %s" % symbol.value)
                     if fuck != True:
-                        code_list.append(lex_code)
-                        lexeme_list.append(buffer)
+                        with open("test.txt", "a") as output_file:
+                            output_file.write(buffer + " : " + str(lex_code) + "\n")
+                        #code_list.append(lex_code)
+                        # lexeme_list.append(buffer)
             except EOFException:
                 pass
 
@@ -105,3 +108,5 @@ if __name__ == '__main__':
     for i in lexeme_list, code_list:
         print(i)
     print(errors)
+    # data = ['Test data', code_list]
+    # json.dump(data, open('test.json', 'w'))
