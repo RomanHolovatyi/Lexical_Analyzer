@@ -1,4 +1,5 @@
 from tables import *
+import pickle
 from prettytable import PrettyTable
 
 
@@ -56,7 +57,7 @@ class LexicalAnalyzer:
                     #         buffer += symbol.value
                     #         symbol = gets(f)
                     if symbol.attr == 2:  # identifier
-                        while symbol.attr == 2 or symbol.attr == 1:
+                        while symbol.attr == 2 or symbol.attr == 1 and symbol.value != '':
                             buffer += symbol.value
                             symbol = self.gets(f)
                         if buffer in key_words:
@@ -67,9 +68,9 @@ class LexicalAnalyzer:
                             lex_code = len(variables_tab) + len(key_words) + 501
                             variables_tab[buffer] = lex_code
                     elif symbol.attr == 3:  # comments
-                            second_symbol = self.gets(f)
+                            symbol = self.gets(f)
                             # ???
-                            if second_symbol.value != '*':
+                            if symbol.value != '*':
                                 lex_code = ord('(')
                                 buffer = "("
                             else:
