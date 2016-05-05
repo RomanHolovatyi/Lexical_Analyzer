@@ -67,20 +67,24 @@ class LexicalAnalyzer:
                             lex_code = len(variables_tab) + len(key_words) + 501
                             variables_tab[buffer] = lex_code
                     elif symbol.attr == 3:  # comments
-                        try:
                             second_symbol = self.gets(f)
                             # ???
-                            if second_symbol != '*':
+                            if second_symbol.value != '*':
                                 lex_code = ord('(')
                                 buffer = "("
                             else:
                                 while symbol.value != ')':
-                                    symbol = self.gets(f)
                                     while symbol.value != '*':
+                                        if symbol.value == '':
+                                            errors.append("Expected *) but end of file was found")
+                                            break
                                         symbol = self.gets(f)
-                        except EOFException:
-                            errors.append("Expected *) but end of file was found")
-                            pass
+                                    fuck = True  # because of empty symbol is in buffer
+                                    if symbol.value == '':
+                                        errors.append("Expected *) but end of file was found")
+                                        break
+                                    symbol = self.gets(f)
+                                symbol = self.gets(f)
                     elif symbol.attr == 4:  # delimiters
                         buffer = symbol.value
                         lex_code = delimiters[buffer]
@@ -99,3 +103,4 @@ if __name__ == '__main__':
     la.scan()
     for i in lexeme_list, code_list:
         print(i)
+    print(errors)
