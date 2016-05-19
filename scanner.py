@@ -1,10 +1,4 @@
 from tables import *
-import json
-from prettytable import PrettyTable
-
-
-class EOFException(Exception):
-    pass
 
 
 def get_symbol_attribute(char):
@@ -28,35 +22,23 @@ class LexicalAnalyzer:
     errors = []
 
     def gets(self, f):
-        # new_symbol = tsymbol()
         char = f.read(1).lower()
-        # print(char, end="")
-        # if not char:
-        #     raise EOFException
-        # return Symbol(char, get_symbol_attribute(char))
         new_symbol = tsymbol(char, get_symbol_attribute(char))
         return new_symbol
 
     def scan(self):
-        # read_flag = True
-        # res = []
         lex_code = 0
         open("test.txt", 'w').close()
         with open("test.dat") as f:
-            try:
                 symbol = self.gets(f)
                 while True:
-                    fuck = False
+                    flag = False
                     buffer = ""
                     if symbol.value == '':
                         break
                     lex_code = 0
                     while symbol.attr == 0 and symbol.value != '':  # Whitespaces
                         symbol = self.gets(f)
-                    # elif symbol.attr == 1:  # Constant
-                    #     while symbol.attr == 1:
-                    #         buffer += symbol.value
-                    #         symbol = gets(f)
                     if symbol.attr == 2:  # identifier
                         while symbol.attr == 2 or symbol.attr == 1 and symbol.value != '':
                             buffer += symbol.value
@@ -70,7 +52,6 @@ class LexicalAnalyzer:
                             variables_tab[buffer] = lex_code
                     elif symbol.attr == 3:  # comments
                             symbol = self.gets(f)
-                            # ???
                             if symbol.value != '*':
                                 lex_code = ord('(')
                                 buffer = "("
@@ -81,7 +62,7 @@ class LexicalAnalyzer:
                                             errors.append("Expected *) but end of file was found")
                                             break
                                         symbol = self.gets(f)
-                                    fuck = True  # because of empty symbol is in buffer
+                                    flag = True  # because of empty symbol is in buffer
                                     if symbol.value == '':
                                         errors.append("Expected *) but end of file was found")
                                         break
@@ -93,20 +74,18 @@ class LexicalAnalyzer:
                         symbol = self.gets(f)
                     elif symbol.attr == 5:  # Error
                         errors.append("Wrong symbol: %s" % symbol.value)
-                    if fuck != True:
+                    if flag != True:
                         with open("test.txt", "a") as output_file:
                             output_file.write(buffer + " : " + str(lex_code) + "\n")
-                        #code_list.append(lex_code)
-                        # lexeme_list.append(buffer)
-            except EOFException:
-                pass
+
 
 if __name__ == '__main__':
     la = LexicalAnalyzer()
-#    la.prerry_print()
     la.scan()
-    for i in lexeme_list, code_list:
-        print(i)
-    print(errors)
-    # data = ['Test data', code_list]
-    # json.dump(data, open('test.json', 'w'))
+    with open("test.txt", "a") as output_file:
+        output_file.write("---------------------")
+        output_file.write("Variable Table")
+        output_file.write("---------------------")
+        output_file.write("\n" + "|Name      Code|" + "\n")
+        for i in variables_tab:
+            output_file.write(i + "       " + str(variables_tab[i]) + "\n")
